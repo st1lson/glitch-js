@@ -119,7 +119,16 @@ skip     glitch-playwright@0.1.0  (already on the registry)
 
 Publishing happens in dependency order, so nothing ships before something it depends on. The adapters depend on core through a caret range rather than an exact pin, which means a core patch reaches existing users without republishing every adapter.
 
-A tag that would publish nothing fails the workflow rather than succeeding quietly. Publishing requires an `NPM_TOKEN` secret on the `npm` environment, and releases carry provenance.
+CI stages rather than publishes. `npm stage publish` uploads a signed, provenanced tarball that nobody can install yet, and a maintainer promotes it:
+
+```bash
+npm stage list
+npm stage approve <stage-id>
+```
+
+That approval needs two-factor authentication, so the credential CI holds cannot ship code on its own. `NPM_TOKEN` should be a granular token with **Read and write (stage only)** permission. The GitHub release is created as a draft for the same reason: publish it once the versions are live.
+
+A tag that would release nothing fails the workflow rather than succeeding quietly.
 
 ## Contributing
 

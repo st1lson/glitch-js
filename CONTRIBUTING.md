@@ -83,6 +83,8 @@ Packages version independently. Bump only what you changed, then push a `vX.Y.Z`
 
 Bump core alone when the fix is in core. Existing adapter releases pick it up through their caret range, so they do not need republishing unless their own code changed. Bump an adapter alone when the fix is only there.
 
-Run the workflow manually with the dry-run input to see it build, test and pack without publishing.
+CI stages the tarballs rather than publishing them, so a leaked `NPM_TOKEN` cannot make a version installable. Promote a staged release with `npm stage approve`, which requires two-factor authentication, then publish the draft GitHub release the workflow created.
+
+Run the workflow manually with the dry-run input to see it build, test and pack without staging anything.
 
 Once there are more adapters or outside contributors, [Changesets](https://github.com/changesets/changesets) is the natural upgrade: contributors declare the bump alongside their change, and a bot opens the version PR.

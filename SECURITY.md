@@ -29,10 +29,12 @@ That shapes what counts as a vulnerability here.
 
 ## Supply chain
 
-Releases are published from a tagged commit through a GitHub Actions workflow with [npm provenance](https://docs.npmjs.com/generating-provenance-statements), so every tarball on npm carries a verifiable link back to the source and the run that built it. Verify one with:
+Releases are built from a tagged commit through a GitHub Actions workflow with [npm provenance](https://docs.npmjs.com/generating-provenance-statements), so every tarball on npm carries a verifiable link back to the source and the run that built it. Verify one with:
 
 ```bash
 npm audit signatures
 ```
+
+The credential CI holds is a stage-only token. It can upload a candidate tarball but cannot make any version installable; promoting a staged release requires a maintainer with two-factor authentication. A compromise of the repository or its secrets therefore cannot ship code to your machine on its own.
 
 The published packages have no runtime dependencies beyond `glitch-core`, which itself has none. Playwright is a peer dependency, so it comes from your own lockfile rather than ours.
