@@ -1,0 +1,54 @@
+{
+  "name": "glitch-core",
+  "version": "0.1.0",
+  "description": "Zero-dependency client for the Glitch chaos-engineering control API",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/st1lson/glitch-js.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/st1lson/glitch-js/tree/main/packages/core",
+  "keywords": [
+    "glitch",
+    "chaos-engineering",
+    "testing",
+    "fault-injection"
+  ],
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.esm.json && tsc -p tsconfig.cjs.json && node ../../scripts/fixup.mjs .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test --experimental-strip-types test/*.test.ts"
+  },
+  "engines": {
+    "node": ">=20.11"
+  },
+  "bugs": {
+    "url": "https://github.com/st1lson/glitch-js/issues"
+  },
+  "publishConfig": {
+    "provenance": true
+  }
+}
