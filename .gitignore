@@ -153,3 +153,6 @@ blob-report/
 
 # Biome and hook caches
 .biome-cache/
+
+# Scratch copy of the integration fixture, reseeded on every run
+packages/playwright/e2e/fixtures/db.json

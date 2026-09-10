@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { copyFileSync, existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { defineConfig, devices } from '@playwright/test';
 import type { GlitchOptions } from 'glitch-playwright';
@@ -24,6 +24,10 @@ function launcher(): string {
 }
 
 const glitch = launcher();
+
+// The JSON engine persists writes, so the suite would otherwise grow its own
+// fixture on every run. Tests work against a scratch copy of the seed.
+copyFileSync(join(FIXTURES, 'db.seed.json'), join(FIXTURES, 'db.json'));
 
 export default defineConfig<GlitchOptions>({
   testDir: './tests',
