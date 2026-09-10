@@ -35,6 +35,8 @@ Releases are built from a tagged commit through a GitHub Actions workflow with [
 npm audit signatures
 ```
 
+The first version of each package is the one exception: npm cannot stage a package that does not exist yet, so it is published by hand and carries no attestation. Every version after it is built and signed in CI.
+
 The credential CI holds is a stage-only token. It can upload a candidate tarball but cannot make any version installable; promoting a staged release requires a maintainer with two-factor authentication. A compromise of the repository or its secrets therefore cannot ship code to your machine on its own.
 
 The published packages have no runtime dependencies beyond `glitch-core`, which itself has none. Playwright is a peer dependency, so it comes from your own lockfile rather than ours.
