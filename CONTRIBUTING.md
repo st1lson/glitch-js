@@ -79,13 +79,44 @@ Write a comment only when it explains something the next line does not: a server
 
 Packages version independently. Bump only what you changed, then push a `vX.Y.Z` tag.
 
-`scripts/release-plan.mjs` decides what ships: a package is published only when its manifest version is not already on the registry, in dependency order. Run it locally to preview a release. A tag that would publish nothing fails rather than succeeding quietly.
+`scripts/release-plan.mjs` decides what ships: a package goes out only when its manifest version is not already on the registry, in dependency order so nothing ships before something it depends on. Run it to preview a release.
 
-Bump core alone when the fix is in core. Existing adapter releases pick it up through their caret range, so they do not need republishing unless their own code changed. Bump an adapter alone when the fix is only there.
+```bash
+node scripts/release-plan.mjs
+```
 
-CI stages the tarballs rather than publishing them, so a leaked `NPM_TOKEN` cannot make a version installable. Promote a staged release with `npm stage approve`, which requires two-factor authentication, then publish the draft GitHub release the workflow created.
+```
+publish  glitch-core@0.1.1  (new version)
+skip     glitch-playwright@0.1.0  (already on the registry)
+```
 
-A brand-new package cannot be staged, so its first version is published by hand with `npm publish` and is the only one without provenance. Staging works from the second version onward.
+Bump core alone when the fix is in core. Adapters pick it up through their caret range, so they need no republishing unless their own code changed. Bump an adapter alone when the fix is only there. A tag that would release nothing fails rather than succeeding quietly.
+
+### Approving a release
+
+CI stages rather than publishes, so a leaked `NPM_TOKEN` cannot make a version installable. Promote it yourself:
+
+```bash
+npm stage list
+npm stage approve <stage-id>
+```
+
+That approval requires two-factor authentication. The GitHub release is drafted for the same reason, so publish the draft once the versions are live.
+
+`NPM_TOKEN` lives on the `npm` environment and should be a granular token with **Read and write (stage only)** permission. Nothing broader is needed, and nothing broader should be used.
+
+### Bootstrapping a new package
+
+npm cannot stage a package that does not exist, so the first version of each package is published by hand:
+
+```bash
+npm login
+npm publish --workspace <name> --no-provenance
+```
+
+`--no-provenance` is required because attestation needs a CI provider, and the manifests turn provenance on by default. That first version is the only one without it; everything from the second onward is staged and attested.
+
+### Notes
 
 Run the workflow manually with the dry-run input to see it build, test and pack without staging anything.
 

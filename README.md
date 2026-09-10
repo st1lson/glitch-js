@@ -102,43 +102,6 @@ Set `GLITCH_VERSION` if you want to pin a specific version. If you already have 
 | `npm run test:e2e`  | Runs integration tests against a real Glitch server    |
 | `npm run clean`     | Removes build output                                   |
 
-## Releasing
-
-Packages version independently. Bump only the ones you changed, then push a `vX.Y.Z` tag to trigger a release.
-
-The manifest version is the source of truth. A package ships only when its version is not already on the registry, so a fix to one adapter goes out without dragging the others along. Preview what a tag would publish:
-
-```bash
-node scripts/release-plan.mjs
-```
-
-```
-publish  glitch-core@0.1.1  (new version)
-skip     glitch-playwright@0.1.0  (already on the registry)
-```
-
-Publishing happens in dependency order, so nothing ships before something it depends on. The adapters depend on core through a caret range rather than an exact pin, which means a core patch reaches existing users without republishing every adapter.
-
-CI stages rather than publishes. `npm stage publish` uploads a signed, provenanced tarball that nobody can install yet, and a maintainer promotes it:
-
-```bash
-npm stage list
-npm stage approve <stage-id>
-```
-
-That approval needs two-factor authentication, so the credential CI holds cannot ship code on its own. `NPM_TOKEN` should be a granular token with **Read and write (stage only)** permission. The GitHub release is created as a draft for the same reason: publish it once the versions are live.
-
-A tag that would release nothing fails the workflow rather than succeeding quietly.
-
-One exception, once per package: npm cannot stage a package that does not exist yet, so a first release has to be published by hand.
-
-```bash
-npm login
-npm publish --workspace <name>
-```
-
-That first version carries no provenance, because attestation requires publishing from CI. Every version after it goes through the pipeline and is attested.
-
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the repository layout, testing conventions, and instructions for adding an adapter for another framework.
