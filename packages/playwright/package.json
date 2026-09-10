@@ -61,6 +61,7 @@
     "url": "https://github.com/st1lson/glitch-js/issues"
   },
   "publishConfig": {
+    "access": "public",
     "provenance": true
   }
 }
