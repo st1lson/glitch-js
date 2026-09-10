@@ -56,7 +56,7 @@ test('nested chaos sections match the declared types', async ({ glitch }) => {
   const baseline = await glitch.baseline();
 
   for (const [section, keys] of Object.entries(NESTED_KEYS)) {
-    const value = baseline[section as keyof typeof baseline] as Record<string, unknown>;
+    const value = baseline[section as keyof typeof baseline] as unknown as Record<string, unknown>;
     expect(Object.keys(value).sort(), `config.${section}`).toEqual(keys);
   }
 });

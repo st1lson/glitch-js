@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "glitch-core": ["./packages/core/src/index.ts"],
+      "glitch-playwright": ["./packages/playwright/src/index.ts"]
+    }
+  }
+}
