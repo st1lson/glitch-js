@@ -1,6 +1,6 @@
 {
   "name": "glitch-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Zero-dependency client for the Glitch chaos-engineering control API",
   "license": "Apache-2.0",
   "repository": {

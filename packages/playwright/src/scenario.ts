@@ -12,7 +12,6 @@ export function scenarioFromTestInfo(testInfo: TestInfo): string {
   const project = testInfo.project.name;
   const file = testInfo.file ? basename(testInfo.file) : undefined;
 
-  // titlePath carries the project and file on some Playwright versions only.
   const titles = testInfo.titlePath.filter(
     (title) => title !== '' && title !== project && title !== testInfo.file && title !== file,
   );

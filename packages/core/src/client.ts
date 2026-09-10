@@ -37,7 +37,6 @@ import type {
 /** Minimal response shape a transport must produce. */
 export interface TransportResponse {
   status: number;
-  /** Empty string when the response carried no body. */
   body: string;
 }
 
@@ -57,19 +56,14 @@ export type FetchLike = (
 export type ProfileName = (typeof BUILTIN_PROFILES)[number] | (string & {});
 
 export interface GlitchClientOptions {
-  /** Defaults to `GLITCH_URL`, then `http://localhost:3000`. */
   url?: string | undefined;
-  /** Defaults to `GLITCH_TOKEN`. */
   token?: string | undefined;
-  /** Omit to target the default scenario. */
   scenario?: string | undefined;
   transport?: Transport | undefined;
-  /** Failsafe auto-resume for `pause` and `paused`. Defaults to 30 seconds. */
   pauseTimeout?: DurationInput | undefined;
 }
 
 function env(name: string): string | undefined {
-  // Guarded so the client also runs in a browser, where Cypress executes it.
   const proc = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process;
   const value = proc?.env?.[name];
   return value === undefined || value === '' ? undefined : value;

@@ -1,21 +1,11 @@
-/**
- * Every literal the SDK shares with the Glitch server, so a protocol change is
- * one edit rather than a search across the codebase.
- */
-
 export const SCENARIO_HEADER = 'X-Glitch-Scenario';
 
 export const CONTROL_PREFIX = '/_glitch';
 
-/** Where the server records traffic that carries no scenario header. */
 export const DEFAULT_SCENARIO = 'default';
 
 export const DEFAULT_BASE_URL = 'http://localhost:3000';
 
-/**
- * Failsafe auto-resume applied when a pause carries no timeout. A scenario left
- * paused blocks every later request tagged with it.
- */
 export const DEFAULT_PAUSE_TIMEOUT = '30s';
 
 export const ENV_VAR = {

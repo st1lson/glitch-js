@@ -1,6 +1,6 @@
 {
   "name": "glitch-playwright",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Playwright fixtures for Glitch, the API chaos-engineering interceptor",
   "license": "Apache-2.0",
   "repository": {
