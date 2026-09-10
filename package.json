@@ -1,0 +1,43 @@
+{
+  "name": "glitch-js",
+  "private": true,
+  "description": "TypeScript SDKs for the Glitch chaos-engineering control API",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/st1lson/glitch-js.git"
+  },
+  "homepage": "https://github.com/st1lson/glitch-js",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:e2e": "npm run build && npm run test:e2e --workspace glitch-playwright",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "check": "npm run lint && npm run typecheck && npm test",
+    "clean": "node scripts/clean.mjs",
+    "glitch:install": "node scripts/install-glitch.mjs",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.13",
+    "@types/node": "^24.10.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.1",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=20.11"
+  },
+  "lint-staged": {
+    "*.{ts,mts,mjs,js,cjs,json,jsonc}": [
+      "biome check --write --no-errors-on-unmatched"
+    ]
+  }
+}

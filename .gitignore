@@ -141,3 +141,15 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Glitch server binary fetched for the integration suite
+.glitch/
+
+# Playwright output
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+
+# Biome and hook caches
+.biome-cache/
