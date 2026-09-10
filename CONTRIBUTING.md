@@ -8,7 +8,9 @@ npm run build
 npm test
 ```
 
-Node 20.11 or newer. The build is TypeScript and nothing else, so there is no bundler to configure.
+Node 22.18 or newer, because the unit tests run TypeScript sources directly and native type stripping is unflagged from that version. The published packages themselves only need Node 20.11, which CI verifies by importing the built tarballs on it.
+
+The build is TypeScript and nothing else, so there is no bundler to configure.
 
 The integration suite drives a real Glitch server rather than a stub. That is what keeps the hand-written TypeScript types honest against the Go config schema, so it needs a server binary and a browser:
 

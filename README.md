@@ -37,6 +37,8 @@ npm install --save-dev glitch-playwright
 
 Requires Node 20.11 or newer. Both packages ship ESM and CommonJS builds.
 
+Contributing to the repo itself needs Node 22.18 or newer, since the tests run TypeScript sources directly.
+
 ## Why it is split this way
 
 Core is deliberately split into two layers.

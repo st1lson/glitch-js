@@ -33,7 +33,7 @@
     "typescript": "^7.0.2"
   },
   "engines": {
-    "node": ">=20.11"
+    "node": ">=22.18"
   },
   "lint-staged": {
     "*.{ts,mts,mjs,js,cjs,json,jsonc}": [
