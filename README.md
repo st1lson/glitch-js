@@ -3,7 +3,7 @@
 [![glitch-core](https://img.shields.io/npm/v/glitch-core?logo=npm&label=glitch-core&color=cb3837)](https://www.npmjs.com/package/glitch-core)
 [![glitch-playwright](https://img.shields.io/npm/v/glitch-playwright?logo=npm&label=glitch-playwright&color=cb3837)](https://www.npmjs.com/package/glitch-playwright)
 [![CI](https://github.com/st1lson/glitch-js/actions/workflows/ci.yml/badge.svg)](https://github.com/st1lson/glitch-js/actions/workflows/ci.yml)
-[![node](https://img.shields.io/node/v/glitch-playwright)](https://nodejs.org)
+[![node](https://img.shields.io/badge/node-%3E%3D20.11-brightgreen)](https://nodejs.org)
 [![license](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
 JavaScript and TypeScript SDKs for [Glitch](https://github.com/st1lson/glitch), an API chaos-engineering interceptor.

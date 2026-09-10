@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       dry-run:
-        description: Build, test and pack without publishing anything
+        description: Build, test and pack without staging anything
         type: boolean
         default: true
 
@@ -58,12 +58,12 @@ jobs:
         run: node scripts/verify-package.mjs
 
       # Fails when every manifest version is already on the registry, so a tag
-      # that would publish nothing stops here instead of succeeding silently.
+      # that would release nothing stops here instead of succeeding silently.
       - name: Show the release plan
         run: node scripts/release-plan.mjs
 
-  publish:
-    name: Publish to npm
+  stage:
+    name: Stage on npm
     needs: verify
     if: startsWith(github.ref, 'refs/tags/v') && !inputs.dry-run
     runs-on: ubuntu-latest
@@ -75,7 +75,7 @@ jobs:
       # Lets npm attach a provenance attestation tying the tarball to this run.
       id-token: write
     outputs:
-      published: ${{ steps.publish.outputs.published }}
+      staged: ${{ steps.stage.outputs.staged }}
 
     steps:
       - uses: actions/checkout@v7
@@ -92,31 +92,47 @@ jobs:
 
       - run: npm run build
 
-      # Only packages whose version is not yet on the registry, in dependency
-      # order so nothing ships before something it depends on. The plan is read
-      # before the first publish, because afterwards every package looks done.
-      - name: Publish
-        id: publish
+      - name: Stage
+        id: stage
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           set -euo pipefail
 
+          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
+            echo "NPM_TOKEN is empty. Add it as a secret on the 'npm' environment" >&2
+            echo "(Settings > Environments > npm > Environment secrets), or as a" >&2
+            echo "repository secret. The name must be exactly NPM_TOKEN." >&2
+            exit 1
+          fi
+
           names=$(node scripts/release-plan.mjs --names)
           specs=$(node scripts/release-plan.mjs --specs | tr '\n' ' ')
 
           for name in $names; do
-            echo "::group::publish $name"
-            npm publish --workspace "$name"
+            echo "::group::stage $name"
+            npm stage publish --workspace "$name"
             echo "::endgroup::"
           done
 
-          echo "published=$specs" >> "$GITHUB_OUTPUT"
-          echo "Published: $specs" >> "$GITHUB_STEP_SUMMARY"
+          echo "staged=$specs" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "### Staged, pending approval"
+            echo
+            for spec in $specs; do
+              echo "- $spec"
+            done
+            echo
+            echo "Nothing is installable until a maintainer promotes it:"
+            echo
+            echo "    npm stage list"
+            echo "    npm stage approve <stage-id>"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   github-release:
-    name: Create the GitHub release
-    needs: publish
+    name: Draft the GitHub release
+    needs: stage
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -127,29 +143,35 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Create the release
+      - name: Draft the release
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ github.ref_name }}
-          PUBLISHED: ${{ needs.publish.outputs.published }}
+          STAGED: ${{ needs.stage.outputs.staged }}
         run: |
           set -euo pipefail
 
           notes=$(mktemp)
           {
-            echo "### Published"
+            echo "### Staged"
             echo
-            for spec in $PUBLISHED; do
+            for spec in $STAGED; do
               name=${spec%@*}
               version=${spec##*@}
-              echo "- [\`$spec\`](https://www.npmjs.com/package/$name/v/$version)"
+              echo "- [$spec](https://www.npmjs.com/package/$name/v/$version)"
             done
+            echo
+            echo "Promote them on npm, then publish this draft:"
+            echo
+            echo "    npm stage list"
+            echo "    npm stage approve <stage-id>"
             echo
             echo "Packages not listed were unchanged and keep their current version."
           } > "$notes"
 
           gh release create "$VERSION" \
             --title "$VERSION" \
+            --draft \
             --generate-notes \
             --notes-file "$notes" \
             --verify-tag
