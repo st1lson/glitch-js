@@ -46,7 +46,7 @@
     "test:e2e": "playwright test --config e2e/playwright.config.ts"
   },
   "dependencies": {
-    "glitch-core": "0.1.0"
+    "glitch-core": "^0.1.0"
   },
   "peerDependencies": {
     "@playwright/test": ">=1.40.0"

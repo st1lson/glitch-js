@@ -102,11 +102,22 @@ Set `GLITCH_VERSION` if you want to pin a specific version. If you already have 
 
 ## Releasing
 
-Bump the version in both package manifests, including the pinned `glitch-core` dependency in the adapter, then push a matching `vX.Y.Z` tag.
+Packages version independently. Bump only the ones you changed, then push a `vX.Y.Z` tag to trigger a release.
 
-The release workflow checks that the tag matches the manifests, runs the full test suite, and publishes core before the adapters so npm can always resolve the dependency.
+The manifest version is the source of truth. A package ships only when its version is not already on the registry, so a fix to one adapter goes out without dragging the others along. Preview what a tag would publish:
 
-Publishing requires an `NPM_TOKEN` secret on the `npm` environment. Releases are published with provenance.
+```bash
+node scripts/release-plan.mjs
+```
+
+```
+publish  glitch-core@0.1.1  (new version)
+skip     glitch-playwright@0.1.0  (already on the registry)
+```
+
+Publishing happens in dependency order, so nothing ships before something it depends on. The adapters depend on core through a caret range rather than an exact pin, which means a core patch reaches existing users without republishing every adapter.
+
+A tag that would publish nothing fails the workflow rather than succeeding quietly. Publishing requires an `NPM_TOKEN` secret on the `npm` environment, and releases carry provenance.
 
 ## Contributing
 

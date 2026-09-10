@@ -75,6 +75,12 @@ Write a comment only when it explains something the next line does not: a server
 
 ## Releasing
 
-Bump the version in both package manifests, including the pinned `glitch-core` dependency in the adapter, then push a matching `vX.Y.Z` tag. The release workflow checks the tag against the manifests, runs the full suite, publishes core before the adapters, and opens the GitHub release.
+Packages version independently. Bump only what you changed, then push a `vX.Y.Z` tag.
 
-Run the workflow manually with the dry-run input first if you want to see it build and pack without publishing.
+`scripts/release-plan.mjs` decides what ships: a package is published only when its manifest version is not already on the registry, in dependency order. Run it locally to preview a release. A tag that would publish nothing fails rather than succeeding quietly.
+
+Bump core alone when the fix is in core. Existing adapter releases pick it up through their caret range, so they do not need republishing unless their own code changed. Bump an adapter alone when the fix is only there.
+
+Run the workflow manually with the dry-run input to see it build, test and pack without publishing.
+
+Once there are more adapters or outside contributors, [Changesets](https://github.com/changesets/changesets) is the natural upgrade: contributors declare the bump alongside their change, and a bot opens the version PR.
