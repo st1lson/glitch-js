@@ -1,0 +1,66 @@
+{
+  "name": "glitch-playwright",
+  "version": "0.1.0",
+  "description": "Playwright fixtures for Glitch, the API chaos-engineering interceptor",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/st1lson/glitch-js.git",
+    "directory": "packages/playwright"
+  },
+  "homepage": "https://github.com/st1lson/glitch-js/tree/main/packages/playwright",
+  "keywords": [
+    "glitch",
+    "playwright",
+    "chaos-engineering",
+    "testing",
+    "fault-injection",
+    "e2e"
+  ],
+  "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.esm.json && tsc -p tsconfig.cjs.json && node ../../scripts/fixup.mjs .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test test/*.test.ts",
+    "test:e2e": "playwright test --config e2e/playwright.config.ts"
+  },
+  "dependencies": {
+    "glitch-core": "0.1.0"
+  },
+  "peerDependencies": {
+    "@playwright/test": ">=1.40.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  },
+  "engines": {
+    "node": ">=20.11"
+  },
+  "bugs": {
+    "url": "https://github.com/st1lson/glitch-js/issues"
+  },
+  "publishConfig": {
+    "provenance": true
+  }
+}
