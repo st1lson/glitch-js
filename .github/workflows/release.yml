@@ -13,7 +13,8 @@ on:
 permissions: {}
 
 env:
-  NODE_VERSION: '22'
+  # Staged publishing needs npm 11.15; Node 24 bundles 11.19, Node 22 only 10.9.
+  NODE_VERSION: '24'
 
 jobs:
   verify:
@@ -88,12 +89,6 @@ jobs:
           cache: npm
           registry-url: https://registry.npmjs.org
 
-      # npm stage arrived in npm 12, and Node 22 still bundles npm 10.
-      - name: Use an npm that can stage
-        run: |
-          npm install -g npm@12
-          npm --version
-
       - run: npm ci
 
       - run: npm run build
@@ -112,14 +107,11 @@ jobs:
             exit 1
           fi
 
-          names=$(node scripts/release-plan.mjs --names)
-          specs=$(node scripts/release-plan.mjs --specs | tr '\n' ' ')
+          # Read the plan before staging, and use the same script a maintainer
+          # runs locally, so the two paths cannot drift.
+          specs=$(npm run release-plan --silent -- --specs | tr '\n' ' ')
 
-          for name in $names; do
-            echo "::group::stage $name"
-            npm stage publish --workspace "$name"
-            echo "::endgroup::"
-          done
+          npm run stage
 
           echo "staged=$specs" >> "$GITHUB_OUTPUT"
 

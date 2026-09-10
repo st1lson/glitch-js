@@ -23,7 +23,9 @@
     "check": "npm run lint && npm run typecheck && npm test",
     "clean": "node scripts/clean.mjs",
     "glitch:install": "node scripts/install-glitch.mjs",
-    "prepare": "husky"
+    "prepare": "husky",
+    "release-plan": "node scripts/release-plan.mjs",
+    "stage": "node scripts/release-plan.mjs --stage"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.13",
@@ -33,7 +35,8 @@
     "typescript": "^7.0.2"
   },
   "engines": {
-    "node": ">=22.18"
+    "node": ">=22.18",
+    "npm": ">=11.15.0"
   },
   "lint-staged": {
     "*.{ts,mts,mjs,js,cjs,json,jsonc}": [

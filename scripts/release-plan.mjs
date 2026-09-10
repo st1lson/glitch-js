@@ -9,6 +9,7 @@
  *   node scripts/release-plan.mjs            print the plan, fail if empty
  *   node scripts/release-plan.mjs --names    publish order, one name per line
  *   node scripts/release-plan.mjs --specs    same, as name@version
+ *   node scripts/release-plan.mjs --stage    stage everything the plan selects
  *   node scripts/release-plan.mjs --json     the full plan as JSON
  */
 import { execFileSync, execSync } from 'node:child_process';
@@ -20,8 +21,8 @@ const PACKAGES_DIR = join(REPO_ROOT, 'packages');
 
 const isWindows = process.platform === 'win32';
 
-function npm(args) {
-  const options = { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] };
+function npm(args, overrides = {}) {
+  const options = { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], ...overrides };
   if (!isWindows) return execFileSync('npm', args, options);
 
   // Node refuses to spawn a .cmd shim without a shell, and npm on Windows is one.
@@ -98,6 +99,23 @@ if (process.argv.includes('--specs')) {
 
 if (process.argv.includes('--json')) {
   console.log(JSON.stringify({ publish: toPublish, skip: plan.filter((e) => !e.publish) }, null, 2));
+  process.exit(0);
+}
+
+if (process.argv.includes('--stage')) {
+  if (toPublish.length === 0) {
+    console.error('Nothing to stage. Bump a version in packages/*/package.json first.');
+    process.exit(1);
+  }
+
+  for (const entry of toPublish) {
+    console.log(`\nstaging ${entry.name}@${entry.version}`);
+    npm(['stage', 'publish', '--workspace', entry.name], { stdio: 'inherit' });
+  }
+
+  console.log('\nStaged. Nothing is installable until a maintainer promotes it:\n');
+  console.log('  npm stage list');
+  console.log('  npm stage approve <stage-id>');
   process.exit(0);
 }
 
