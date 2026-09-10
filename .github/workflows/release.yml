@@ -88,6 +88,12 @@ jobs:
           cache: npm
           registry-url: https://registry.npmjs.org
 
+      # npm stage arrived in npm 12, and Node 22 still bundles npm 10.
+      - name: Use an npm that can stage
+        run: |
+          npm install -g npm@12
+          npm --version
+
       - run: npm ci
 
       - run: npm run build
