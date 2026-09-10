@@ -1,0 +1,6 @@
+# Baseline for the SDK integration tests: a healthy server with no chaos, so
+# every effect a test observes must have come from the SDK.
+port: 3100
+host: localhost
+file: db.json
+no_tui: true
