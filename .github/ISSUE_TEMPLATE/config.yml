@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Glitch server issues
+    url: https://github.com/st1lson/glitch/issues
+    about: Chaos injection, the control API, or anything else in the Go server.

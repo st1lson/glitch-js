@@ -1,0 +1,49 @@
+name: Bug report
+description: Something in the SDK does not behave as documented
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For a problem with the Glitch server itself rather than these packages,
+        please open it at https://github.com/st1lson/glitch/issues instead.
+
+  - type: input
+    id: package
+    attributes:
+      label: Package and version
+      placeholder: "glitch-playwright 0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: Node, Playwright and Glitch server versions
+      placeholder: "node 22.11.0, @playwright/test 1.63.0, glitch v0.4.2"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened instead
+      description: Include the full error and stack trace if there is one.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: The smallest test and config that shows the problem.
+      render: ts
+    validations:
+      required: true
