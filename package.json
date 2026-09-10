@@ -23,9 +23,7 @@
     "check": "npm run lint && npm run typecheck && npm test",
     "clean": "node scripts/clean.mjs",
     "glitch:install": "node scripts/install-glitch.mjs",
-    "prepare": "husky",
-    "release-plan": "node scripts/release-plan.mjs",
-    "stage": "node scripts/release-plan.mjs --stage"
+    "prepare": "husky"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.13",

@@ -13,7 +13,6 @@ on:
 permissions: {}
 
 env:
-  # Staged publishing needs npm 11.15; Node 24 bundles 11.19, Node 22 only 10.9.
   NODE_VERSION: '24'
 
 jobs:
@@ -107,11 +106,16 @@ jobs:
             exit 1
           fi
 
-          # Read the plan before staging, and use the same script a maintainer
-          # runs locally, so the two paths cannot drift.
-          specs=$(npm run release-plan --silent -- --specs | tr '\n' ' ')
+          # Read the plan before staging, because afterwards every package
+          # looks like it is already on the registry.
+          names=$(node scripts/release-plan.mjs --names)
+          specs=$(node scripts/release-plan.mjs --specs | tr '\n' ' ')
 
-          npm run stage
+          for name in $names; do
+            echo "::group::stage $name"
+            npm stage publish --workspace "$name"
+            echo "::endgroup::"
+          done
 
           echo "staged=$specs" >> "$GITHUB_OUTPUT"
 
