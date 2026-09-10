@@ -85,6 +85,8 @@ Bump core alone when the fix is in core. Existing adapter releases pick it up th
 
 CI stages the tarballs rather than publishing them, so a leaked `NPM_TOKEN` cannot make a version installable. Promote a staged release with `npm stage approve`, which requires two-factor authentication, then publish the draft GitHub release the workflow created.
 
+A brand-new package cannot be staged, so its first version is published by hand with `npm publish` and is the only one without provenance. Staging works from the second version onward.
+
 Run the workflow manually with the dry-run input to see it build, test and pack without staging anything.
 
 Once there are more adapters or outside contributors, [Changesets](https://github.com/changesets/changesets) is the natural upgrade: contributors declare the bump alongside their change, and a bot opens the version PR.

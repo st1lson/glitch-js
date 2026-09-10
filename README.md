@@ -130,6 +130,15 @@ That approval needs two-factor authentication, so the credential CI holds cannot
 
 A tag that would release nothing fails the workflow rather than succeeding quietly.
 
+One exception, once per package: npm cannot stage a package that does not exist yet, so a first release has to be published by hand.
+
+```bash
+npm login
+npm publish --workspace <name>
+```
+
+That first version carries no provenance, because attestation requires publishing from CI. Every version after it goes through the pipeline and is attested.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the repository layout, testing conventions, and instructions for adding an adapter for another framework.
